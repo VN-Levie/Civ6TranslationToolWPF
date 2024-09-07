@@ -1,0 +1,57 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:system="clr-namespace:System;assembly=netstandard">
+    <system:String x:Key="OpenFolder">Open Folder</system:String>
+    <system:String x:Key="OpenFile">Open XML File</system:String>
+    <system:String x:Key="DisplayLanguage">Language</system:String>
+    <system:String x:Key="English">English</system:String>
+    <system:String x:Key="Vietnamese">Tiếng Việt</system:String>
+    <system:String x:Key="Search">Search</system:String>
+    <system:String x:Key="CaseSensitive">Case Sensitive</system:String>
+    <system:String x:Key="TagOnly">Tag Only</system:String>
+    <system:String x:Key="Translation">Translation</system:String>
+    <system:String x:Key="ViewXML">View XML</system:String>
+    <system:String x:Key="WordWrap">Word Wrap</system:String>
+    <system:String x:Key="FormatDocument">Format Document</system:String>
+    <system:String x:Key="SaveXML">Save XML</system:String>
+    <system:String x:Key="OriginalText">Original Text</system:String>
+    <system:String x:Key="TranslatedText">Translated Text</system:String>
+    <system:String x:Key="CopyDown">Copy down</system:String>
+    <system:String x:Key="CopyOriginal">Copy Original</system:String>
+    <system:String x:Key="AutoTranslate">Auto Translate</system:String>
+    <system:String x:Key="PasteFromClipboard">Paste</system:String>
+    <system:String x:Key="Save">Save</system:String>
+    <system:String x:Key="ClearTranslationBox">Clear Translation Box</system:String>
+    <system:String x:Key="SaveFile">Save File</system:String>
+    <system:String x:Key="SaveAll">Save All</system:String>
+    <system:String x:Key="ExitApp">Exit App</system:String>
+
+    <!-- File editing not supported message -->
+    <system:String x:Key="FileEditingNotSupported">This file is currently not supported for editing. To view the file contents, select the "XML Editor" Tab.</system:String>
+    <system:String x:Key="ErrorReadingFile">Error occurred while reading the file: {0}</system:String>
+    <system:String x:Key="UnsupportedFileFormat">The file format is unsupported.</system:String>
+
+    <system:String x:Key="PastedFromClipboard">Pasted content from clipboard.</system:String>
+    <system:String x:Key="NoTextInClipboard">There is no text data in the clipboard.</system:String>
+    <system:String x:Key="XmlSavedSuccessfully">XML has been saved and updated successfully!</system:String>
+    <system:String x:Key="XmlSaveError">Error while saving XML: {0}</system:String>
+    <system:String x:Key="FileSaveError">Error while saving file {0}: {1}</system:String>
+    <system:String x:Key="SaveAllSuccess">All files have been saved.</system:String>
+    <system:String x:Key="FileSaveSuccess">File saved: {0}</system:String>
+    <system:String x:Key="XmlFormatError">Error formatting XML document: {0}</system:String>
+    <system:String x:Key="XmlFormattedSuccess">XML document has been formatted successfully.</system:String>
+    <system:String x:Key="SelectDataToSave">Please reselect the data cell to save.</system:String>
+    <system:String x:Key="XmlElementNotFound">Could not find the corresponding XML element.</system:String>
+    <system:String x:Key="XmlTextElementNotFound">Could not find the &lt;Text&gt; element inside the XML tag.</system:String>
+    <system:String x:Key="XmlElementNotFoundWithTag">Could not find the corresponding element in the XML document: {0}</system:String>
+    <system:String x:Key="Translated">Translated</system:String>
+    <system:String x:Key="Copied">Copied!</system:String>
+    <system:String x:Key="ErrorLoadingDLCXmlFile">An error occurred while loading XML file for DLC: {0}</system:String>
+    <system:String x:Key="ErrorLoadingXmlFile">An error occurred while loading XML file: {0} \n {1}</system:String>
+    <system:String x:Key="SelectXmlFolder">Select the folder containing XML files</system:String>
+    <system:String x:Key="XmlParseError">The data in the XML file is invalid after editing. Please check again</system:String>
+    <system:String x:Key="NotificationDetails">Notification Details</system:String>
+    <system:String x:Key="ClickToSeeDetails">(Click to see details)</system:String>
+    <system:String x:Key="UnsavedChangesWarning">No data will be saved to the actual XML file until you press the "{0}" button below</system:String>
+    <system:String x:Key="LoadingFile">Loading file: {0}</system:String>
+</ResourceDictionary>

@@ -1,0 +1,46 @@
+﻿<UserControl x:Class="Civ6TranslationToolWPF.ToastNotification"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             MinWidth="50" MaxWidth="500" MinHeight="80" MaxHeight="500"
+             MouseEnter="UserControl_MouseEnter"
+             MouseLeave="UserControl_MouseLeave"
+             MouseLeftButtonDown="UserControl_MouseLeftButtonDown">
+    <!-- Border chứa toàn bộ thông báo để tạo góc bo tròn -->
+    <Border Background="{DynamicResource MaterialDesignPaper}" 
+            CornerRadius="10" 
+            Padding="10" 
+            Opacity="1">
+        <Grid>
+            <!-- Text thông báo -->
+            <TextBlock Name="NotificationText" 
+                       FontSize="16" 
+                       FontWeight="Medium" 
+                       Foreground="{DynamicResource MaterialDesignBody}" 
+                       TextWrapping="Wrap" 
+                       VerticalAlignment="Center"
+                       TextAlignment="Center"
+                       Margin="5,0,10,0"/>
+
+            <!-- Nút đóng với icon X từ MaterialDesign -->
+            <!--<Button HorizontalAlignment="Right" 
+                    VerticalAlignment="Top" 
+                    Width="24" 
+                    Height="24" 
+                    Style="{StaticResource MaterialDesignToolButton}"
+                    Background="Transparent" 
+                    BorderBrush="Transparent" 
+                    Cursor="Hand" 
+                    Click="CloseButton_Click">
+                <materialDesign:PackIcon Kind="Close" Width="16" Height="16" Foreground="{DynamicResource MaterialDesignBody}"/>
+            </Button>-->
+        </Grid>
+    </Border>
+
+    <UserControl.Resources>
+        <!-- Animation cho fade out -->
+        <Storyboard x:Key="FadeOutStoryboard">
+            <DoubleAnimation Storyboard.TargetProperty="Opacity" From="1" To="0" Duration="0:0:2"/>
+        </Storyboard>
+    </UserControl.Resources>
+</UserControl>

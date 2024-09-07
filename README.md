@@ -30,8 +30,8 @@ The **Civ6 Translation Tool** is a WPF application designed to help with transla
 1. Clone the project:
 
    ```bash
-   git clone https://github.com/yourusername/civ6-translation-tool.git
-   cd civ6-translation-tool
+   git clone https://github.com/VN-Levie/Civ6TranslationToolWPF.git
+   cd Civ6TranslationToolWPF
    ```
 
 2. Open the project in Visual Studio or any .NET-supported IDE.
@@ -86,8 +86,8 @@ See the full license [here](https://www.gnu.org/licenses/gpl-3.0.en.html).
 1. Clone dự án:
 
    ```bash
-   git clone https://github.com/yourusername/civ6-translation-tool.git
-   cd civ6-translation-tool
+   git clone https://github.com/VN-Levie/Civ6TranslationToolWPF.git
+   cd Civ6TranslationToolWPF
    ```
 
 2. Mở dự án trong Visual Studio hoặc bất kỳ IDE nào hỗ trợ .NET.

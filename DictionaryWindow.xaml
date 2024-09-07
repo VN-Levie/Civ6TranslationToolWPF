@@ -1,0 +1,38 @@
+﻿<Window x:Class="Civ6TranslationToolWPF.DictionaryWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        Title="Quản lý Từ điển" Height="600" Width="800"
+        WindowStartupLocation="CenterScreen"
+        Style="{StaticResource MaterialDesignWindow}">
+
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="300"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        <!-- Cột bên trái: Danh sách từ điển -->
+        <ListBox Name="dictionaryList" Margin="5">
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="{Binding}" VerticalAlignment="Center"/>
+                        <Button Content="Xóa" Margin="5,0,0,0" Click="DeleteDictionary_Click"/>
+                    </StackPanel>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
+
+        <!-- Cột bên phải: Phần chỉnh sửa từ điển -->
+        <StackPanel Grid.Column="1" Margin="5">
+            <TextBox Name="dictionaryNameTextBox" Width="200" Margin="5" />
+            <TextBox Name="dictionaryContentTextBox" AcceptsReturn="True" Height="400" Margin="5" TextWrapping="Wrap"/>
+
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="5">
+                <Button Content="Lưu" Click="SaveDictionary_Click" Style="{StaticResource MaterialDesignFlatButton}" Margin="5"/>
+                <Button Content="Hủy" Click="Cancel_Click" Style="{StaticResource MaterialDesignFlatButton}" Margin="5"/>
+            </StackPanel>
+        </StackPanel>
+    </Grid>
+</Window>

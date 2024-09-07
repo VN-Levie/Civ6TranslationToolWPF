@@ -1,0 +1,478 @@
+﻿<Page x:Class="Civ6TranslationToolWPF.Pages.MainPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:Civ6TranslationToolWPF.Pages"
+      xmlns:avalonedit="http://icsharpcode.net/sharpdevelop/avalonedit"
+      mc:Ignorable="d"     
+      KeyDown="Window_KeyDown"
+      xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"     
+      Title="MainPage">
+    <!--d:DesignHeight="450" d:DesignWidth="800"-->
+    <Grid>
+
+        <Grid.RowDefinitions>
+
+            <RowDefinition Height="Auto"/>
+            <!-- Toolbar -->
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+            <!-- Main Content -->
+        </Grid.RowDefinitions>
+
+
+        <!-- Toolbar -->
+        <ToolBarTray Grid.Row="0" IsLocked="True" >
+
+            <ToolBar>
+
+                <!-- Nút "Chọn thư mục" -->
+                <Button Style="{StaticResource MaterialDesignFlatButton}" Margin="5" Click="OpenBaseFolder_Click">
+                    <StackPanel Orientation="Horizontal">
+                        <materialDesign:PackIcon Kind="FolderOpen" Width="16" Height="16" Margin="0,0,5,0"/>
+                        <TextBlock Text="{DynamicResource OpenFolder}" VerticalAlignment="Center"/>
+                    </StackPanel>
+                </Button>
+
+                <!-- Nút "Mở File XML" -->
+                <Button Style="{StaticResource MaterialDesignFlatButton}" Margin="5" Click="OpenXMLFile_Click" x:Name="OpenXMLFile_btn">
+                    <StackPanel Orientation="Horizontal">
+                        <materialDesign:PackIcon Kind="FileDocument" Width="16" Height="16" Margin="0,0,5,0"/>
+                        <TextBlock Text="{DynamicResource OpenFile}" VerticalAlignment="Center"/>
+                    </StackPanel>
+                </Button>
+
+                <Button Style="{StaticResource MaterialDesignFlatButton}" Margin="5" Click="OpenDictionary_Click">
+                    <StackPanel Orientation="Horizontal">
+                        <materialDesign:PackIcon Kind="BookOpenVariant" Width="16" Height="16" Margin="0,0,5,0"/>
+                        <TextBlock Text="Từ điển" VerticalAlignment="Center"/>
+                    </StackPanel>
+                </Button>
+
+
+                <!-- Căn nút chọn ngôn ngữ sang phải -->
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="5">
+                    <!-- Menu chọn ngôn ngữ -->
+                    <Menu Margin="5">
+                        <MenuItem>
+                            <MenuItem.Header>
+                                <StackPanel Orientation="Horizontal">
+                                    <materialDesign:PackIcon Kind="Translate" Width="16" Height="16" Margin="0,0,5,0"/>
+                                    <TextBlock Text="{DynamicResource DisplayLanguage}" VerticalAlignment="Center"/>
+                                </StackPanel>
+                            </MenuItem.Header>
+
+                            <!-- Chọn ngôn ngữ English -->
+                            <MenuItem Header="{DynamicResource English}" Click="ChangeLanguageToEnglish_Click">
+                                <MenuItem.Icon>
+                                    <materialDesign:PackIcon Kind="Flag" Width="16" Height="16" Margin="0,0,5,0"/>
+                                </MenuItem.Icon>
+                            </MenuItem>
+
+                            <!-- Chọn ngôn ngữ Vietnamese -->
+                            <MenuItem Header="{DynamicResource Vietnamese}" Click="ChangeLanguageToVietnamese_Click">
+                                <MenuItem.Icon>
+                                    <materialDesign:PackIcon Kind="Flag" Width="16" Height="16" Margin="0,0,5,0"/>
+                                </MenuItem.Icon>
+                            </MenuItem>
+                        </MenuItem>
+                    </Menu>
+                </StackPanel>
+
+            </ToolBar>
+        </ToolBarTray>
+
+
+
+
+
+
+
+
+        <Grid Grid.Row="1" Background="{DynamicResource MaterialDesignShadowBrush}"  Name="MainGrid">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="300"/>
+                <!-- Left Sidebar (TreeView) -->
+
+                <!-- GridSplitter sẽ nằm giữa các cột -->
+                <ColumnDefinition Width="Auto"/>
+                <!-- Cột chứa GridSplitter -->
+
+                <ColumnDefinition Width="*"/>
+                <!-- Right Content (DataGrid) -->
+            </Grid.ColumnDefinitions>
+            <!-- TreeView (Left Side) -->
+
+            <!--<TreeView Grid.Column="0" Name="xmlTreeView" Margin="5">                
+          </TreeView>-->
+            <TreeView Grid.Column="0" Name="xmlTreeView" Margin="5"
+              Background="{DynamicResource MaterialDesignDarkSeparatorBackground}"
+              Foreground="{DynamicResource MaterialDesignBody}"
+              BorderThickness="1" 
+              BorderBrush="{DynamicResource MaterialDesignDivider}">
+                <TreeView.ItemContainerStyle>
+                    <Style TargetType="TreeViewItem">
+                        <Setter Property="FontSize" Value="14"/>
+                        <Setter Property="Padding" Value="5"/>
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate TargetType="TreeViewItem">
+                                    <StackPanel>
+                                        <Border BorderThickness="0,0,0,1"
+                              BorderBrush="{DynamicResource MaterialDesignDivider}"
+                              Background="{DynamicResource MaterialDesignPaper}">
+                                            <StackPanel Orientation="Horizontal">
+                                                <materialDesign:PackIcon Kind="FileTree" Width="16" Height="16" Margin="5"/>
+                                                <ContentPresenter/>
+                                            </StackPanel>
+                                        </Border>
+                                        <ItemsPresenter/>
+                                    </StackPanel>
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                    </Style>
+                </TreeView.ItemContainerStyle>
+            </TreeView>
+
+
+
+            <GridSplitter 
+              Grid.Column="1" 
+              Width="3" 
+              HorizontalAlignment="Stretch" 
+              VerticalAlignment="Stretch"  
+              Focusable="False"               
+              ToolTip="Đổi kích thước">
+            </GridSplitter>
+            <!-- DataGrid (Right Side) -->
+            <Grid Grid.Column="2"  Margin="2" >
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                    <!--<RowDefinition Height="*"/>-->
+                    <RowDefinition Height="Auto"/>
+
+                </Grid.RowDefinitions>
+
+
+
+                <Border Background="{DynamicResource MaterialDesignPaper}" Padding="5" CornerRadius="5" Grid.Row="0" Margin="5" x:Name="searchArea">
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch" Margin="5">
+                        <!-- Icon Search -->
+                        <materialDesign:PackIcon Kind="Magnify" Width="20" Height="20" VerticalAlignment="Center" Margin="5"/>
+                        <!-- TextBlock for search label -->
+                        <TextBlock Text="{DynamicResource Search}" VerticalAlignment="Center" Margin="5"/>
+                        <!-- TextBox for search input -->
+                        <TextBox Name="searchTextBox" AcceptsReturn="False" Width="350"  Style="{StaticResource MaterialDesignTextBox}" Background="{DynamicResource MaterialDesignBackground}"
+                        Foreground="{DynamicResource MaterialDesignBody}" 
+                        TextChanged="SearchTextBox_TextChanged" KeyDown="SearchTextBox_KeyDown" 
+                        Margin="5"/>
+                        <CheckBox Name="caseSensitiveCheckBox" 
+                                Content="{DynamicResource CaseSensitive}" 
+                                Margin="5"                                   
+                                Checked="CaseSensitiveCheckBox_Checked" 
+                                Unchecked="CaseSensitiveCheckBox_Unchecked"
+                                Foreground="{DynamicResource MaterialDesignBody}"/>
+
+                        <CheckBox Name="tagOnlyCheckBox" 
+                                Content="{DynamicResource TagOnly}" 
+                                Foreground="{DynamicResource MaterialDesignBody}"
+                                Margin="5"
+                                Checked="TagOnlyCheckBox_Checked" 
+                                Unchecked="TagOnlyCheckBox_Unchecked"/>
+                    </StackPanel>
+                </Border>
+
+
+                <TabControl Grid.Row="1" Background="{DynamicResource MaterialDesignLightSeparatorBackground}" >
+                    <TabItem Header="{DynamicResource Translation}" x:Name="tran">
+                        <Grid>
+                            <Grid.RowDefinitions>
+
+                                <RowDefinition Height="*"/>
+                                <!--<RowDefinition Height="*"/>-->
+                                <RowDefinition Height="Auto"/>
+
+                            </Grid.RowDefinitions>
+                            <Grid  Grid.Row="0">
+                                <DataGrid Name="translationDataGrid" 
+                                  Margin="5" 
+                                  AutoGenerateColumns="False" 
+                                  MinRowHeight="27" 
+                                  RowHeight="50" 
+                                  SelectionMode="Single"  
+                                  SelectionChanged="TranslationDataGrid_SelectionChanged"
+                                  MouseDoubleClick="TranslationDataGrid_MouseDoubleClick" 
+                                  Foreground="{DynamicResource MaterialDesignBody}" 
+                                  Background="#FF323232"
+                                  BorderBrush="{DynamicResource MaterialDesignDivider}">
+                                    <DataGrid.Columns>
+                                        <DataGridTextColumn Header="#" Binding="{Binding Index}" IsReadOnly="True" MaxWidth="80"/>
+                                        <DataGridTextColumn Header="{DynamicResource OriginalText}" Binding="{Binding OriginalText}" IsReadOnly="True" Width="3*"/>
+                                        <DataGridTextColumn Header="Tag Name" Binding="{Binding Tag}" IsReadOnly="True" Width="1*"/>
+                                        <DataGridTextColumn Header="Lang" Binding="{Binding Language}" IsReadOnly="True" Width="100"/>
+                                    </DataGrid.Columns>
+                                </DataGrid>
+
+
+                            </Grid>
+
+
+
+
+                            <Grid Grid.Row="1">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="*"/>
+                                    <RowDefinition Height="Auto"/>
+                                </Grid.RowDefinitions>
+
+                                <!-- Phần nhập và sửa văn bản -->
+                                <StackPanel Grid.Row="0" Margin="5">
+                                    <Border Background="{DynamicResource MaterialDesignPaper}" Padding="5" CornerRadius="5">
+                                        <StackPanel>
+                                            <!-- Original Text -->
+                                            <TextBlock Text="{DynamicResource OriginalText}" Margin="5" Foreground="{DynamicResource MaterialDesignBody}"/>
+                                            <TextBox Name="originalTextBox" TextWrapping="Wrap" AcceptsReturn="True" Height="100" IsReadOnly="True" Margin="5" Background="{DynamicResource MaterialDesignBackground}" Foreground="{DynamicResource MaterialDesignBody}"/>
+
+                                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Margin="5">
+                                                <!-- Translated Text -->
+                                                <TextBlock Text="{DynamicResource TranslatedText}" Margin="5, 5, 5, 0" Foreground="{DynamicResource MaterialDesignBody}"/>
+
+                                                <!-- Nút Copy down -->
+                                                <Button Style="{StaticResource MaterialDesignFlatButton}" Margin="0, 0, 10, 0" Click="TransferText_Click" x:Name="TransferText_btn">
+                                                    <StackPanel Orientation="Horizontal">
+                                                        <materialDesign:PackIcon Kind="ArrowDownBold" Width="16" Height="16" Margin="0,0,5,0"/>
+                                                        <TextBlock Text="{DynamicResource CopyDown}" VerticalAlignment="Center"/>
+                                                    </StackPanel>
+                                                </Button>
+
+                                                <!-- Nút Copy Original -->
+                                                <Button Style="{StaticResource MaterialDesignFlatButton}" Margin="0, 0, 10, 0" Click="CopyOriginalText_Click">
+                                                    <StackPanel Orientation="Horizontal">
+                                                        <materialDesign:PackIcon Kind="ContentCopy" Width="16" Height="16" Margin="0,0,5,0"/>
+                                                        <TextBlock Text="{DynamicResource CopyOriginal}" VerticalAlignment="Center"/>
+                                                    </StackPanel>
+                                                </Button>
+
+                                                <!-- Nút Dịch tự động -->
+                                                <Button Style="{StaticResource MaterialDesignFlatButton}" Margin="0, 0, 10, 0" Click="AutoTranslate_Click" x:Name="AutoTranslate_btn">
+                                                    <StackPanel Orientation="Horizontal">
+                                                        <materialDesign:PackIcon Kind="Translate" Width="16" Height="16" Margin="0,0,5,0"/>
+                                                        <TextBlock Text="{DynamicResource AutoTranslate}" VerticalAlignment="Center"/>
+                                                    </StackPanel>
+                                                </Button>
+
+                                                <!-- Nút Paste từ clipboard -->
+                                                <Button Style="{StaticResource MaterialDesignFlatButton}" Margin="0, 0, 10, 0" Click="PasteFromClipboard_Click" x:Name="PasteFromClipboard_btn">
+                                                    <StackPanel Orientation="Horizontal">
+                                                        <materialDesign:PackIcon Kind="ClipboardArrowDown" Width="16" Height="16" Margin="0,0,5,0"/>
+                                                        <TextBlock Text="{DynamicResource PasteFromClipboard}" VerticalAlignment="Center"/>
+                                                    </StackPanel>
+                                                </Button>
+
+                                                <!-- Nút Lưu -->
+                                                <Button Style="{StaticResource MaterialDesignFlatButton}" Margin="0, 0, 10, 0" Click="Insert_Click" x:Name="Insert_btn">
+                                                    <StackPanel Orientation="Horizontal">
+                                                        <materialDesign:PackIcon Kind="ContentSave" Width="16" Height="16" Margin="0,0,5,0"/>
+                                                        <TextBlock Text="{DynamicResource Save}" VerticalAlignment="Center"/>
+                                                    </StackPanel>
+                                                </Button>
+                                            </StackPanel>
+
+                                            <!-- Ô nhập văn bản dịch -->
+                                            <TextBox Name="translatedTextBox" TextWrapping="Wrap" AcceptsReturn="True" Height="100" MaxHeight="100" Margin="5" Background="{DynamicResource MaterialDesignBackground}" Foreground="{DynamicResource MaterialDesignBody}"/>
+
+                                            <!-- Bộ nút tương tác văn bản -->
+                                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="5">
+                                                <!-- Nút Xóa trắng ô dịch -->
+                                                <Button Style="{StaticResource MaterialDesignFlatButton}" Margin="5" Click="ClearTranslatedText_Click" x:Name="ClearTranslatedText_btn">
+                                                    <StackPanel Orientation="Horizontal">
+                                                        <materialDesign:PackIcon Kind="Eraser" Width="16" Height="16" Margin="0,0,5,0"/>
+                                                        <TextBlock Text="{DynamicResource ClearTranslationBox}" VerticalAlignment="Center"/>
+                                                    </StackPanel>
+                                                </Button>
+                                            </StackPanel>
+                                        </StackPanel>
+                                    </Border>
+                                </StackPanel>
+
+                            </Grid>
+
+                        </Grid>
+                    </TabItem>
+                    <TabItem Header="{DynamicResource ViewXML}" x:Name="showXML">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+
+                            <!-- AvalonEdit XML Viewer -->
+                            <Grid Grid.Row="0" Margin="5" Background="{DynamicResource MaterialDesignDarkSeparatorBackground}">
+                                <avalonedit:TextEditor                                  
+                                  Background="{DynamicResource MaterialDesignLightSeparatorBackground}" 
+                                  Foreground="{DynamicResource MaterialDesignBody}" 
+                                  Name="xmlTextEditor" 
+                                  TextChanged="XmlTextEditor_TextChanged" 
+                                  SyntaxHighlighting="XML" 
+                                  ShowLineNumbers="True" 
+                                  WordWrap="True"/>
+                            </Grid>
+
+                            <!-- Panel chứa các nút thao tác -->
+                            <Grid Grid.Row="1" Margin="5" Background="{DynamicResource MaterialDesignPaper}">
+                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="5">
+                                    <CheckBox Content="{DynamicResource WordWrap}" IsChecked="False" 
+                                            x:Name="WordWrap_checkBox"
+                                            Checked="WordWrap_Checked" 
+                                            Unchecked="WordWrap_Unchecked" 
+                                            Margin="5" 
+                                            Foreground="{DynamicResource MaterialDesignBody}"/>
+
+                                    <!-- Format Button with icon -->
+                                    <Button Style="{StaticResource MaterialDesignFlatButton}" Click="FormatDocument_Click" Margin="5" x:Name="FormatDocument_btn">
+                                        <StackPanel Orientation="Horizontal">
+                                            <materialDesign:PackIcon Kind="FormatAlignJustify" Width="16" Height="16" Margin="0,0,5,0"/>
+                                            <TextBlock Text="{DynamicResource FormatDocument}" VerticalAlignment="Center"/>
+                                        </StackPanel>
+                                    </Button>
+
+                                    <!-- Save XML Button with icon -->
+                                    <Button Style="{StaticResource MaterialDesignFlatButton}" Click="SaveXml_Click" Margin="5" x:Name="SaveXml_btn">
+                                        <StackPanel Orientation="Horizontal">
+                                            <materialDesign:PackIcon Kind="ContentSave" Width="16" Height="16" Margin="0,0,5,0"/>
+                                            <TextBlock Text="{DynamicResource SaveXML}" VerticalAlignment="Center"/>
+                                        </StackPanel>
+                                    </Button>
+                                </StackPanel>
+                            </Grid>
+                        </Grid>
+                    </TabItem>
+
+                </TabControl>
+                <Grid Grid.Row="2">
+                    <StackPanel Grid.Row="1" Margin="5">
+                        <Border Background="{DynamicResource MaterialDesignPaper}" Padding="5" CornerRadius="5">
+                            <StackPanel>
+
+                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch" Margin="5">
+                                    <materialDesign:PackIcon Kind="Info" Width="20" Height="20" VerticalAlignment="Center" Margin="5"/>
+                                    <!-- TextBlock for search label -->
+                                    <TextBlock x:Name="UnsavedChangesWarningTextBlock" VerticalAlignment="Center" Margin="5"/>
+
+                                </StackPanel>
+                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch" Margin="5">
+
+                                    <!-- TextBox hiển thị đường dẫn file -->
+                                    <TextBox Name="filePathTextBox" Margin="5" IsReadOnly="True" MinWidth="350" Width="700"
+                                           Background="{DynamicResource MaterialDesignBackground}"
+                                           Foreground="{DynamicResource MaterialDesignBody}"
+                                           Text="Chưa mở tệp nào" 
+                                           Style="{StaticResource MaterialDesignTextBox}" />
+
+                                    <!-- Nút Save -->
+                                    <Button Style="{StaticResource MaterialDesignFlatButton}" Margin="5" Click="Save_Click">
+                                        <StackPanel Orientation="Horizontal">
+                                            <materialDesign:PackIcon Kind="ContentSave" Width="16" Height="16" Margin="0,0,5,0"/>
+                                            <TextBlock Text="{DynamicResource SaveFile}" VerticalAlignment="Center"/>
+                                        </StackPanel>
+                                    </Button>
+
+                                    <!-- Nút Save all -->
+                                    <Button Style="{StaticResource MaterialDesignFlatButton}" Margin="5" Click="SaveAll_Click">
+                                        <StackPanel Orientation="Horizontal">
+                                            <materialDesign:PackIcon Kind="ContentSaveAll" Width="16" Height="16" Margin="0,0,5,0"/>
+                                            <TextBlock Text="{DynamicResource SaveAll}" VerticalAlignment="Center"/>
+                                        </StackPanel>
+                                    </Button>
+
+                                    <!-- Nút Exit App -->
+                                    <Button Style="{StaticResource MaterialDesignFlatButton}" Margin="5" Click="Close_Click">
+                                        <StackPanel Orientation="Horizontal">
+                                            <materialDesign:PackIcon Kind="ExitToApp" Width="16" Height="16" Margin="0,0,5,0"/>
+                                            <TextBlock Text="{DynamicResource ExitApp}" VerticalAlignment="Center"/>
+                                        </StackPanel>
+                                    </Button>
+                                </StackPanel>
+                            </StackPanel>
+                        </Border>
+                    </StackPanel>
+                </Grid>
+
+            </Grid>
+            <Grid>
+                <ProgressBar x:Name="progressBar" Height="40" Width="500" HorizontalAlignment="Center" VerticalAlignment="Bottom"/>
+                <TextBlock x:Name="progressText" HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="0,5" FontSize="16"/>
+            </Grid>
+        </Grid>
+
+    </Grid>
+
+    <Page.Resources>
+        <!-- Style cho TextBox -->
+        <Style TargetType="TextBox">
+            <Setter Property="Background" Value="White"/>
+            <Setter Property="Foreground" Value="Black"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="CaretBrush" Value="White"/>
+            <Setter Property="Padding" Value="5"/>
+            <Setter Property="Effect">
+                <Setter.Value>
+                    <DropShadowEffect Color="Gray" Opacity="0.2" ShadowDepth="0" BlurRadius="5"/>
+                </Setter.Value>
+            </Setter>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="TextBox">
+                        <Border 
+                            Background="{TemplateBinding Background}" 
+                            BorderBrush="{TemplateBinding BorderBrush}" 
+                            BorderThickness="{TemplateBinding BorderThickness}" 
+                            CornerRadius="5">
+                            <ScrollViewer x:Name="PART_ContentHost"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="BorderBrush" Value="#95D0EB"/>
+                </Trigger>
+                <Trigger Property="IsKeyboardFocused" Value="True">
+                    <Setter Property="BorderBrush" Value="#C3A7E3"/>
+                    <Setter Property="Effect">
+                        <Setter.Value>
+                            <DropShadowEffect Color="Gray" Opacity="0.6" ShadowDepth="1" BlurRadius="8"/>
+                        </Setter.Value>
+                    </Setter>
+                </Trigger>
+                <Trigger Property="IsReadOnly" Value="True">
+                    <Setter Property="Background" Value="#F0F0F0"/>
+                    <Setter Property="Foreground" Value="#A0A0A0"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <!-- Style cho avalonedit:TextEditor -->
+        <Style TargetType="{x:Type avalonedit:TextEditor}">
+            <Setter Property="Background" Value="{DynamicResource MaterialDesignBackground}" />
+            <Setter Property="Foreground" Value="{DynamicResource MaterialDesignBody}" />
+            <Setter Property="FontSize" Value="14" />
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="BorderBrush" Value="#95D0EB"/>
+                </Trigger>
+                <Trigger Property="IsKeyboardFocused" Value="True">
+                    <Setter Property="BorderBrush" Value="#C3A7E3"/>
+                    <Setter Property="Effect">
+                        <Setter.Value>
+                            <DropShadowEffect Color="Gray" Opacity="0.6" ShadowDepth="1" BlurRadius="8"/>
+                        </Setter.Value>
+                    </Setter>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+    </Page.Resources>
+</Page>

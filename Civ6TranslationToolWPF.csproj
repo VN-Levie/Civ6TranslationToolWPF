@@ -11,6 +11,7 @@
 
   <ItemGroup>
     <None Remove="civ-tran-2-removebg-preview-transformed.png" />
+    <None Remove="civ-tran-2.ico" />
     <None Remove="civ-tran-2.png" />
     <None Remove="civ6-2.png" />
     <None Remove="logotrans.png" />
@@ -27,6 +28,7 @@
 
   <ItemGroup>
     <Resource Include="civ-tran-2-removebg-preview-transformed.png" />
+    <Resource Include="civ-tran-2.ico" />
     <Resource Include="civ-tran-2.png" />
     <Resource Include="civ6-2.png" />
     <Resource Include="logotrans.png" />

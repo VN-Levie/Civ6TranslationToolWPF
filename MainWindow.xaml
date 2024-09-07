@@ -4,7 +4,7 @@
         xmlns:avalonedit="http://icsharpcode.net/sharpdevelop/avalonedit"
         Title="Civ6 Translation Tool" MinHeight="940" MinWidth="1280"
         WindowStartupLocation="CenterScreen" 
-        Icon="/civ-tran-2-removebg-preview-transformed.png" 
+        Icon="/civ-tran-2.ico" 
         AllowDrop="True"
         KeyDown="Window_KeyDown"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"

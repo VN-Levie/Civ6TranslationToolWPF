@@ -1,0 +1,40 @@
+name: .NET Core Desktop Build
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+
+    - name: Setup .NET Core SDK
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: 8.0.x
+
+    - name: Setup MSBuild
+      uses: microsoft/setup-msbuild@v2
+
+    - name: Build project
+      run: dotnet build --configuration Release
+
+    - name: Run unit tests
+      run: dotnet test --no-build
+
+    - name: Publish application
+      run: dotnet publish -c Release -r win-x64 --self-contained false
+
+    - name: Upload build artifacts
+      uses: actions/upload-artifact@v3
+      with:
+        name: Build Artifacts
+        path: ./bin/Release/net8.0/win-x64/publish/

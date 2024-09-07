@@ -7,6 +7,7 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <UseWPF>true</UseWPF>
     <UseWindowsForms>True</UseWindowsForms>
+    <ApplicationIcon>civ-tran-2.ico</ApplicationIcon>
   </PropertyGroup>
 
   <ItemGroup>
@@ -19,6 +20,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Content Include="civ-tran-2.ico" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="AvalonEdit" Version="6.3.0.90" />
     <PackageReference Include="Avalonia.AvaloniaEdit" Version="11.1.0" />
     <PackageReference Include="MaterialDesignColors" Version="3.1.0" />
@@ -27,12 +32,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Resource Include="civ-tran-2-removebg-preview-transformed.png" />
     <Resource Include="civ-tran-2.ico" />
-    <Resource Include="civ-tran-2.png" />
-    <Resource Include="civ6-2.png" />
-    <Resource Include="logotrans.png" />
-    <Resource Include="tran-logo.png" />
   </ItemGroup>
 
 </Project>

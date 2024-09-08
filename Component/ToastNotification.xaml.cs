@@ -22,7 +22,7 @@ namespace Civ6TranslationToolWPF
 
             if (message.Length > MaxLength)
             {
-                NotificationText.Text = message.Substring(0, MaxLength) + "\n... \n"+MainWindow.T("ClickToSeeDetails");
+                NotificationText.Text = message.Substring(0, MaxLength) + "\n... \n" + MainWindow.T("ClickToSeeDetails");
             }
             else
             {

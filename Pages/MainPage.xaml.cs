@@ -1,20 +1,9 @@
 ﻿using Civ6TranslationToolWPF.Levie;
-using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 using System.Xml.Linq;
 using Application = System.Windows.Application;
 using Clipboard = System.Windows.Clipboard;
@@ -30,6 +19,11 @@ namespace Civ6TranslationToolWPF.Pages
     /// </summary>
     public partial class MainPage : Page
     {
+        private static readonly Lazy<MainPage> _instance = new(() => new MainPage());
+
+        // Thuộc tính Instance để truy cập đối tượng singleton
+        public static MainPage Instance => _instance.Value;
+
         public AppState appState = AppState.GetInstance();
         private string _currentFilePath = "";
         private string _currentFolderPath = "";
@@ -37,14 +31,12 @@ namespace Civ6TranslationToolWPF.Pages
         public bool IsLoadDone { get; set; } = false;
         public MainPage()
         {
-            InitializeComponent();
-            _ = LoadDataWithProgressAsync(10);
-            _ = LoadDataWithProgressAsync(LockXml: true);
-            ChangeLanguage(appState.Language ?? "en_US");
+            InitializeComponent();     
+            
             InitializeAppState();
         }
 
-        private async Task LoadDataWithProgressAsync(int totalSteps = 100, bool NeedWait = false, bool LockControll = false, bool LockXml = false)
+        public async Task LoadDataWithProgressAsync(int totalSteps = 100, bool NeedWait = false, bool LockControll = false, bool LockXml = false)
         {
             IsLoadDone = false;
             progressText.Text = "Starting";
@@ -107,46 +99,9 @@ namespace Civ6TranslationToolWPF.Pages
         }
 
 
-        private void ChangeLanguage(string langCode)
-        {
-            try
-            {
-                ResourceDictionary dict = new ResourceDictionary();
-                switch (langCode)
-                {
-                    case "en_US":
-                        dict.Source = new Uri("Resources.en.xaml", UriKind.Relative);
-                        break;
-                    case "vi_VN":
-                        dict.Source = new Uri("Resources.vi.xaml", UriKind.Relative);
-                        break;
-                    default:
-                        dict.Source = new Uri("Resources.en.xaml", UriKind.Relative);
-                        break;
-                }
+       
 
-                if (Application.Current.Resources.MergedDictionaries.Count > 0)
-                {
-                    Application.Current.Resources.MergedDictionaries[0] = dict;
-                }
-                else
-                {
-                    Application.Current.Resources.MergedDictionaries.Add(dict);
-                }
-
-                appState.Language = langCode;
-                appState.Save();
-                // Cập nhật các text động
-                UpdateDynamicText();
-                _ = LoadDataWithProgressAsync(50);
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"Có lỗi xảy ra khi thay đổi ngôn ngữ: {ex.Message}", "Error");
-            }
-        }
-
-        private void UpdateDynamicText()
+        public void UpdateDynamicText()
         {
             // Lấy chuỗi đã dịch và format lại
             string unsavedChangesWarning = string.Format(T("UnsavedChangesWarning"), T("SaveFile"));
@@ -629,7 +584,7 @@ namespace Civ6TranslationToolWPF.Pages
 
 
 
-        private void ShowNotification(string message)
+        public void ShowNotification(string message)
         {
             ToastNotification toast = new ToastNotification(message);
 
@@ -1079,15 +1034,11 @@ namespace Civ6TranslationToolWPF.Pages
 
 
 
-        private void ChangeLanguageToEnglish_Click(object sender, RoutedEventArgs e)
-        {
-            ChangeLanguage("en_US");
-        }
+        private void ChangeLanguageToEnglish_Click(object sender, RoutedEventArgs e) => MainWindow.Instance.ChangeLanguage("en_US");
+       
 
-        private void ChangeLanguageToVietnamese_Click(object sender, RoutedEventArgs e)
-        {
-            ChangeLanguage("vi_VN");
-        }
+        private void ChangeLanguageToVietnamese_Click(object sender, RoutedEventArgs e) => MainWindow.Instance.ChangeLanguage("vi_VN");
+       
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {

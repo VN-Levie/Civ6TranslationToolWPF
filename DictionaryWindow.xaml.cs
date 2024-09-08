@@ -1,19 +1,7 @@
-﻿using System;
-using System.IO;
-using System.Text;
-using System.Text.RegularExpressions;
+﻿using System.IO;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Xml.Linq;
-using Application = System.Windows.Application;
 using Button = System.Windows.Controls.Button;
-using Clipboard = System.Windows.Clipboard;
-using FolderBrowserDialog = System.Windows.Forms.FolderBrowserDialog;
-using KeyEventArgs = System.Windows.Input.KeyEventArgs;
 using MessageBox = System.Windows.Forms.MessageBox;
-using OpenFileDialog = Microsoft.Win32.OpenFileDialog;
 using Path = System.IO.Path;
 
 namespace Civ6TranslationToolWPF

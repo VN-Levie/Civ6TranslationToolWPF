@@ -88,7 +88,7 @@ namespace Civ6TranslationToolWPF.Levie
             //khởi taọ một List chứa các filestate nếu chưa có thì tạo mới
             Histories ??= [];
             //kiểm tra xem LastFile có tồn tại trong Histories chưa
-            var file = Histories.FirstOrDefault(f => f.FilePath  == LastFile.FilePath );
+            var file = Histories.FirstOrDefault(f => f.FilePath == LastFile.FilePath);
             if (file == null)
             {
                 //nếu chưa tồn tại thì thêm vào
@@ -107,7 +107,7 @@ namespace Civ6TranslationToolWPF.Levie
             //khởi taọ một List chứa các filestate nếu chưa có thì tạo mới
             Histories ??= [];
             //kiểm tra xem LastFile có tồn tại trong Histories chưa
-            var file = Histories.FirstOrDefault(f => f.FilePath  == LastFile.FilePath );
+            var file = Histories.FirstOrDefault(f => f.FilePath == LastFile.FilePath);
             if (file == null)
             {
                 //nếu chưa tồn tại thì thêm vào

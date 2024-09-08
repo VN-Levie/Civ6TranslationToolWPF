@@ -1,38 +1,82 @@
 ﻿using Civ6TranslationToolWPF.Levie;
 using Civ6TranslationToolWPF.Pages;
-using System.IO;
+using CommunityToolkit.Mvvm.Input;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Xml.Linq;
 using Application = System.Windows.Application;
-using Clipboard = System.Windows.Clipboard;
-using FolderBrowserDialog = System.Windows.Forms.FolderBrowserDialog;
-using KeyEventArgs = System.Windows.Input.KeyEventArgs;
-using MessageBox = System.Windows.Forms.MessageBox;
-using OpenFileDialog = Microsoft.Win32.OpenFileDialog;
-using Path = System.IO.Path;
-
+using MessageBox = System.Windows.MessageBox;
 namespace Civ6TranslationToolWPF
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class MainWindow
     {
         public AppState appState = AppState.GetInstance();
-        
+
+        private static readonly Lazy<MainWindow> _instance = new(() => new MainWindow());
+
+        // Thuộc tính Instance để truy cập đối tượng singleton
+        public static MainWindow Instance => _instance.Value;
         public MainWindow()
         {
 
             InitializeComponent();
 
+            DataContext = this;
+
+            var state = new WindowStateManager(this);
+
+            RefreshCommand = new RelayCommand(() => { });
+            MinimizeCommand = new RelayCommand(() => state.Minimize());
+            MaximizeRestoreCommand = new RelayCommand(() => state.MaximizeRestore());
+            CloseCommand = new RelayCommand(() => state.Close());           
             MainFrame.Navigate(new MainPage());
+
             //xmlTreeView.
         }
+
+        public void ChangeLanguage(string langCode)
+        {
+           // _ = MainPage.Instance.LoadDataWithProgressAsync(50);
+            try
+            {
+                string languageResources = "Resources/Resources.en.xaml";
+                languageResources = langCode switch
+                {
+                    "en_US" => "Resources/Resources.en.xaml",
+                    "vi_VN" => "Resources/Resources.vi.xaml",
+                    _ => "Resources.vi.xaml",
+                };
+                ResourceDictionary dict = new ResourceDictionary();
+                dict.Source = new Uri(languageResources, UriKind.Relative);
+
+                if (Application.Current.Resources.MergedDictionaries.Count > 0)
+                {
+                    Application.Current.Resources.MergedDictionaries[0] = dict;
+                }
+                else
+                {
+                    Application.Current.Resources.MergedDictionaries.Add(dict);
+                }
+
+                appState.Language = langCode;
+                appState.Save();
+                // Cập nhật các text động
+                MainPage.Instance.UpdateDynamicText();
+                
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Có lỗi xảy ra khi thay đổi ngôn ngữ: {ex.Message}", "Error");
+            }
+        }
+
+        public RelayCommand RefreshCommand { get; set; }
+        public RelayCommand MinimizeCommand { get; set; }
+        public RelayCommand MaximizeRestoreCommand { get; set; }
+        public RelayCommand CloseCommand { get; set; }
         public static string T(string key, params string[] args)
         {
             try
@@ -91,39 +135,23 @@ namespace Civ6TranslationToolWPF
             return formattedText.ToString().Trim();
         }
 
-        // Xử lý thu nhỏ cửa sổ
-        private void Minimize_Click(object sender, RoutedEventArgs e)
+        private void ChangeLanguageToEnglish_Click(object sender, RoutedEventArgs e)
         {
-            this.WindowState = WindowState.Minimized;
+            MainPage.Instance.ShowNotification("Ngôn ngữ đã được chuyển sang tiếng Anh");
+            ChangeLanguage("en_US");
         }
 
-        // Xử lý phóng to hoặc khôi phục cửa sổ
-        private void Maximize_Click(object sender, RoutedEventArgs e)
+        private void ChangeLanguageToVietnamese_Click(object sender, RoutedEventArgs e)
         {
-            if (this.WindowState == WindowState.Maximized)
-            {
-                this.WindowState = WindowState.Normal;
-            }
-            else
-            {
-                this.WindowState = WindowState.Maximized;
-            }
+            MainPage.Instance.ShowNotification("Ngôn ngữ đã được chuyển sang tiếng Việt");
+            ChangeLanguage("vi_VN");
         }
-
-        // Xử lý đóng cửa sổ
         private void Close_Click(object sender, RoutedEventArgs e)
         {
             this.Close();
         }
 
-        // Di chuyển cửa sổ khi kéo thanh tiêu đề
-        private void TitleBar_MouseDown(object sender, MouseButtonEventArgs e)
-        {
-            if (e.ChangedButton == MouseButton.Left)
-            {
-                this.DragMove();
-            }
-        }
+       
 
     }
 

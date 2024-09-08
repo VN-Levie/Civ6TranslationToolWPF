@@ -33,7 +33,7 @@ namespace Civ6TranslationToolWPF.Levie
 
         public FileState()
         {
-            FilePath = "";          
+            FilePath = "";
             TextDataList = new List<TextData>();
             LastIndex = 0;
             LastModified = DateTime.Now;

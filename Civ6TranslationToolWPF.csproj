@@ -7,20 +7,15 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <UseWPF>true</UseWPF>
     <UseWindowsForms>True</UseWindowsForms>
-    <ApplicationIcon>civ-tran-2.ico</ApplicationIcon>
+    <ApplicationIcon>Resources\civ-tran-2.ico</ApplicationIcon>
   </PropertyGroup>
 
-  <ItemGroup>
-    <None Remove="civ-tran-2-removebg-preview-transformed.png" />
-    <None Remove="civ-tran-2.ico" />
-    <None Remove="civ-tran-2.png" />
-    <None Remove="civ6-2.png" />
-    <None Remove="logotrans.png" />
-    <None Remove="tran-logo.png" />
+  <ItemGroup>   
+    <None Remove="Resources\civ-tran-2.ico" />   
   </ItemGroup>
 
   <ItemGroup>
-    <Content Include="civ-tran-2.ico">
+    <Content Include="Resources\civ-tran-2.ico">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
@@ -32,11 +27,12 @@
     <PackageReference Include="ControlzEx" Version="6.0.0" />
     <PackageReference Include="MaterialDesignColors" Version="3.1.0" />
     <PackageReference Include="MaterialDesignThemes" Version="5.1.0" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.0.0" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
   </ItemGroup>
 
   <ItemGroup>
-    <Resource Include="civ-tran-2.ico" />
+    <Resource Include="Resources\civ-tran-2.ico" />
   </ItemGroup>
 
   <ItemGroup>

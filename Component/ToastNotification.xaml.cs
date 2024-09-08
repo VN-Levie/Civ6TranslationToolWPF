@@ -4,7 +4,7 @@ using System.Windows.Threading;
 using MessageBox = System.Windows.MessageBox;
 using Panel = System.Windows.Controls.Panel;
 using UserControl = System.Windows.Controls.UserControl;
-
+using Civ6TranslationToolWPF.Levie;
 namespace Civ6TranslationToolWPF
 {
     public partial class ToastNotification : UserControl
@@ -22,7 +22,7 @@ namespace Civ6TranslationToolWPF
 
             if (message.Length > MaxLength)
             {
-                NotificationText.Text = message.Substring(0, MaxLength) + "\n... \n" + MainWindow.T("ClickToSeeDetails");
+                NotificationText.Text = message.Substring(0, MaxLength) + "\n... \n" + ResourceHelper.T("ClickToSeeDetails");
             }
             else
             {
@@ -69,7 +69,7 @@ namespace Civ6TranslationToolWPF
 
             if (_fullMessage.Length > MaxLength)
             {
-                MessageBox.Show(_fullMessage, MainWindow.T("NotificationDetails"), MessageBoxButton.OK, MessageBoxImage.Information);
+                MessageBox.Show(_fullMessage, ResourceHelper.T("NotificationDetails"), MessageBoxButton.OK, MessageBoxImage.Information);
             }
             StartFadeOutAndClose();
 

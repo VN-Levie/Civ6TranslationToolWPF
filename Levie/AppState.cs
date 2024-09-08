@@ -17,18 +17,6 @@ namespace Civ6TranslationToolWPF.Levie
         private static readonly string stateFilePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "appData", "state.json");
 
 
-        // Biến lưu trữ singleton của AppState
-        private static AppState? _instance;
-
-        // Phương thức lấy instance (Singleton)
-        public static AppState GetInstance()
-        {
-            if (_instance == null)
-            {
-                _instance = Load(); // Tự động khôi phục trạng thái từ file khi khởi tạo
-            }
-            return _instance;
-        }
 
         // Khởi tạo mặc định
         public AppState()
@@ -60,28 +48,46 @@ namespace Civ6TranslationToolWPF.Levie
         }
 
         // Phương thức khôi phục trạng thái từ file JSON
-        public static AppState Load()
+        public void Load()
         {
             try
             {
                 if (File.Exists(stateFilePath))
                 {
-
-                    return JsonConvert.DeserializeObject<AppState>(File.ReadAllText(stateFilePath)) ?? new AppState();
-
-
+                    AppState appState = JsonConvert.DeserializeObject<AppState>(File.ReadAllText(stateFilePath)) ?? new AppState();
+                    Histories = appState.Histories;
+                    LastModifiedDate = DateTime.Now;
+                    LastFile = appState.LastFile;
+                    Author = appState.Author;
+                    ProjectName = appState.ProjectName;
+                    DirPath = appState.DirPath;
+                    Language = appState.Language;
+                    appState.Save();
                 }
-
+                else
+                {
+                    AppState appState = new AppState();
+                    Histories = appState.Histories;
+                    LastModifiedDate = appState.LastModifiedDate;
+                    LastFile = appState.LastFile;
+                    Author = appState.Author;
+                    ProjectName = appState.ProjectName;
+                    DirPath = appState.DirPath;
+                    Language = appState.Language;
+                    appState.Save();
+                }
+              
 
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"Lỗi khi khôi phục trạng thái: {ex.Message}");
             }
+           
 
-            // Trả về trạng thái mặc định nếu không tìm thấy tệp hoặc có lỗi
-            return new AppState();
         }
+
+
 
         internal void CheckAndAddOrUpdateLastFile()
         {

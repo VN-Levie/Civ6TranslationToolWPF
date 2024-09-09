@@ -9,6 +9,8 @@ using Application = System.Windows.Application;
 using static System.Windows.Visibility;
 using static System.Windows.WindowState;
 using MessageBox = System.Windows.MessageBox;
+using Civ6TranslationToolWPF.Windows;
+using System.Runtime.CompilerServices;
 namespace Civ6TranslationToolWPF
 {
     /// <summary>
@@ -17,24 +19,30 @@ namespace Civ6TranslationToolWPF
     public partial class MainWindow
     {
 
-    
-       
-        public MainWindow(MainWindowViewModel viewModel)
+
+        private LoadingWindow _loadingWindow;  // Lưu trữ loadingWindow
+        public MainWindow(MainWindowViewModel viewModel, LoadingWindow loading)
         {
+            _loadingWindow = loading;
+           
             InitializeComponent();
-
-            DataContext = viewModel;         
-
            
-            MainFrame.Navigate(viewModel.mainPage);
-
-              
+            DataContext = viewModel;
            
+            viewModel.mainPage.PageLoaded += MainPage_PageLoaded!;  // Đăng ký event
           
+           MainFrame.Navigate(viewModel.mainPage);        
 
             this.StateChanged += (_, _) => RefreshMaximizeRestoreButton();
 
             RefreshMaximizeRestoreButton();
+
+            
+        }
+
+        private void MainPage_PageLoaded(object sender, EventArgs e)
+        {
+            _loadingWindow?.Close();
         }
 
 

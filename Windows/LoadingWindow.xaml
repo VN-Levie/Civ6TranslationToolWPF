@@ -1,0 +1,42 @@
+﻿<Window
+    x:Class="Civ6TranslationToolWPF.Windows.LoadingWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:fa="http://schemas.fontawesome.io/icons/"
+    xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+    Title="Loading"
+    Width="300"
+    Height="200"
+    materialDesign:ColorZoneAssist.Mode="PrimaryMid"
+    AllowsTransparency="True"
+    Background="{DynamicResource MaterialDesignPaper}"
+    WindowStartupLocation="CenterScreen"
+    WindowStyle="None">
+
+    <!--  Hiển thị Grid với hiệu ứng bóng  -->
+    <Grid Margin="10">
+        <!--  Biểu tượng loading (circular)  -->
+        <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+            <fa:ImageAwesome
+                Width="50"
+                Height="50"
+                Icon="Spinner"
+                IsManipulationEnabled="True"
+                Spin="True"
+                SpinDuration="2" />
+
+            <!--  TextBlock cho thông báo  -->
+            <TextBlock
+                Margin="0,20,0,0"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                FontSize="20"
+                Foreground="{DynamicResource MaterialDesignBody}">
+                Đang tải, vui lòng đợi...
+            </TextBlock>
+
+
+
+        </StackPanel>
+    </Grid>
+</Window>

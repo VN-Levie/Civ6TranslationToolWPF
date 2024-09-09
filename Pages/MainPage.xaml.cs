@@ -1,5 +1,6 @@
 ﻿using Civ6TranslationToolWPF.Levie;
 using MaterialDesignThemes.Wpf;
+using System.Collections.Concurrent;
 using System.IO;
 using System.Windows;
 using System.Windows.Controls;
@@ -21,66 +22,95 @@ namespace Civ6TranslationToolWPF.Pages
     {
 
 
-        private string _currentFilePath = "";
-        private string _currentFolderPath = "";
-        private Dictionary<string, FileState> openFiles = new Dictionary<string, FileState>();
+        private string _currentFilePath = String.Empty;
+        private string _currentFolderPath = String.Empty;
+        //private readonly Dictionary<string, FileState> openFiles = [];
+        private readonly ConcurrentDictionary<string, FileState> openFiles = [];
         public bool IsLoadDone { get; set; } = false;
 
         private readonly AppState _appState;
         public event EventHandler<string> LanguageChangeRequested = delegate { };
+        public event EventHandler PageLoaded = delegate { };
         public MainPage(AppState appState)
         {
 
             InitializeComponent();
             _appState = appState;
             _ = LoadDataWithProgressAsync(LockXml: true, NeedWait: true, LockControll: true);
-            InitializeAppState();
+
             IsLoadDone = true;
             this.SizeChanged += MainPage_SizeChanged;
+
+            InitializeAppState();
+            this.Loaded += MainPage_Loaded;
+
+        }
+        // Khi trang được tải, kích hoạt event
+        private void MainPage_Loaded(object sender, RoutedEventArgs e)
+        {
+            PageLoaded?.Invoke(this, EventArgs.Empty);  // Gọi event
+        }
+
+        private void InitializeAppState()
+        {
+            _currentFilePath = _appState.LastFile.FilePath;
+            _currentFolderPath = _appState.DirPath;
+            if (!String.IsNullOrEmpty(_currentFilePath))
+            {
+                _ = LoadXmlDataToDataGridAsync(_currentFilePath);
+                //_openTask.RunSynchronously();
+            }
+            if (!String.IsNullOrEmpty(_currentFolderPath))
+            {
+                //_currentFolderPath = String.Empty;
+                if (Path.GetFileName(_currentFolderPath).Equals("DLC"))
+                {
+                    LoadDLCXmlFilesToTreeView(_currentFolderPath);
+                }
+                else
+                {
+                    LoadXmlFilesToTreeView(_currentFolderPath);
+                }
+            }
+            UnsavedChangesWarningTextBlock.Text = string.Format(T("UnsavedChangesWarning"), T("SaveFile"));
         }
 
         private void MainPage_SizeChanged(object sender, SizeChangedEventArgs e)
         {
-            // Nếu chiều rộng của cửa sổ nhỏ hơn 800px, thu nhỏ cột chứa TreeView
+
             if (e.NewSize.Width < 800)
             {
-                TreeViewColumn.Width = new GridLength(0);  // Thu gọn TreeView xuống 50px
-                TreeViewExpander.IsExpanded = false;        // Thu gọn Expander
+                TreeViewColumn.Width = new GridLength(0);
+                TreeViewExpander.IsExpanded = false;
                 ToggleTreeViewIcon.Kind = PackIconKind.MenuClose;
             }
             else
             {
-                TreeViewColumn.Width = new GridLength(300); // Khôi phục kích thước TreeView khi cửa sổ đủ lớn
-                TreeViewExpander.IsExpanded = true;         // Mở rộng Expander
+                TreeViewColumn.Width = new GridLength(300);
+                TreeViewExpander.IsExpanded = true;
                 ToggleTreeViewIcon.Kind = PackIconKind.Backburger;
             }
         }
-     
+
         private void ToggleTreeView_Click(object sender, RoutedEventArgs e)
         {
             if (TreeViewExpander.IsExpanded)
             {
-                // Thu gọn TreeView (đặt chiều rộng cột bằng 0)
                 TreeViewColumn.Width = new GridLength(0);
                 TreeViewExpander.IsExpanded = false;
-
-                // Đổi icon sang "MenuOpen"
                 ToggleTreeViewIcon.Kind = PackIconKind.MenuClose;
             }
             else
             {
-                // Mở lại TreeView (khôi phục chiều rộng)
                 TreeViewColumn.Width = new GridLength(300);
                 TreeViewExpander.IsExpanded = true;
 
-                // Đổi icon về "Menu"
                 ToggleTreeViewIcon.Kind = PackIconKind.Backburger;
             }
         }
 
         public async Task LoadDataWithProgressAsync(int totalSteps = 100, bool NeedWait = false, bool LockControll = false, bool LockXml = false)
         {
-            //MessageBox.Show("Loading");
 
             IsLoadDone = false;
             progressText.Text = "Starting";
@@ -99,38 +129,30 @@ namespace Civ6TranslationToolWPF.Pages
 
             progressBar.Maximum = totalSteps;
 
-            // Sử dụng IProgress để cập nhật tiến độ
             var progress = new Progress<int>(value =>
             {
                 progressBar.Value = value;
                 progressText.Text = $"Loading... {value}%";
             });
 
-            // Giả lập quá trình tải dữ liệu
+
             await Task.Run(() =>
             {
                 for (int i = 0; i <= totalSteps; i++)
                 {
-                    // Giả lập tải mỗi phần dữ liệu
-                    Task.Delay(5).Wait(); // Thay bằng phần xử lý thực tế
+                    Task.Delay(5).Wait();
 
-                    // Báo cáo tiến trình
                     (progress as IProgress<int>)?.Report(i);
                 }
             });
 
-            // Chờ `IsLoadDone` được đặt thành `true` từ bên ngoài
             while (!IsLoadDone && NeedWait)
             {
-                await Task.Delay(5); // Đợi kiểm tra lại mỗi 5ms
+                await Task.Delay(5);
             }
 
             progressBar.Value = totalSteps;
             progressText.Text = "Loading completed!";
-            await Task.Delay(1000); // Đợi một chút để người dùng thấy tiến trình hoàn thành
-            progressBar.Visibility = Visibility.Collapsed;
-            progressText.Visibility = Visibility.Collapsed;
-
             if (LockXml)
             {
                 xmlTreeView.IsEnabled = true;
@@ -140,6 +162,11 @@ namespace Civ6TranslationToolWPF.Pages
             {
                 EnableController();
             }
+            await Task.Delay(1000);
+            progressBar.Visibility = Visibility.Collapsed;
+            progressText.Visibility = Visibility.Collapsed;
+
+
         }
 
 
@@ -147,34 +174,12 @@ namespace Civ6TranslationToolWPF.Pages
 
         public void UpdateDynamicText()
         {
-            // Lấy chuỗi đã dịch và format lại
             string unsavedChangesWarning = string.Format(T("UnsavedChangesWarning"), T("SaveFile"));
 
             UnsavedChangesWarningTextBlock.Text = unsavedChangesWarning;
         }
 
 
-        private void InitializeAppState()
-        {
-            _currentFilePath = _appState.LastFile?.FilePath ?? string.Empty;
-            _currentFolderPath = _appState.DirPath;
-            if (_currentFilePath != "" && _currentFilePath != null)
-            {
-                _ = LoadXmlDataToDataGridAsync(_currentFilePath);
-            }
-            if (_currentFolderPath != "" && _currentFolderPath != null)
-            {
-                if (Path.GetFileName(_currentFolderPath) == "DLC")
-                {
-                    LoadDLCXmlFilesToTreeView(_currentFolderPath);
-                }
-                else
-                {
-                    LoadXmlFilesToTreeView(_currentFolderPath);
-                }
-            }
-            UnsavedChangesWarningTextBlock.Text = string.Format(T("UnsavedChangesWarning"), T("SaveFile"));
-        }
 
         private void OpenBaseFolder_Click(object sender, RoutedEventArgs e)
         {
@@ -195,7 +200,7 @@ namespace Civ6TranslationToolWPF.Pages
                     }
                     foreach (TreeViewItem item in xmlTreeView.Items)
                     {
-                        if (item.Tag.ToString() == _appState.LastFile.FilePath)
+                        if (item.Tag.ToString() == _currentFilePath)
                         {
                             item.IsExpanded = true;
                             item.Focus();
@@ -203,7 +208,7 @@ namespace Civ6TranslationToolWPF.Pages
                             break;
                         }
                     }
-                    _appState.DirPath = selectedPath;
+                    _appState.DirPath = _currentFilePath = selectedPath;
                     _appState.Save();
                 }
             }
@@ -225,7 +230,7 @@ namespace Civ6TranslationToolWPF.Pages
                 xmlItem.Selected += XmlItem_Selected;
 
                 parentItem.Items.Add(xmlItem);
-                if (file == _appState.LastFile.FilePath)
+                if (file == _currentFilePath)
                 {
 
 
@@ -311,7 +316,7 @@ namespace Civ6TranslationToolWPF.Pages
 
 
                             dlcItem.Items.Add(xmlItem);
-                            if (xmlItem.Tag.ToString() == _appState.LastFile.FilePath)
+                            if (xmlItem.Tag.ToString() == _currentFilePath)
                             {
 
                                 xmlItem.IsSelected = true;
@@ -342,16 +347,17 @@ namespace Civ6TranslationToolWPF.Pages
         private async void XmlItem_Selected(object sender, RoutedEventArgs e)
         {
 
-            // Kiểm tra xem sender có phải là TreeViewItem không
-            if (sender is TreeViewItem)
-            {
-                TreeViewItem selectedItem = (TreeViewItem)sender; // Ép kiểu sender về TreeViewItem
 
-                // Kiểm tra xem Tag của TreeViewItem có phải là chuỗi không
-                if (selectedItem.Tag is string)
+            if (sender is TreeViewItem selectedItem)
+            {
+                if (selectedItem.Tag is string filePath)
                 {
-                    string filePath = (string)selectedItem.Tag; // Ép kiểu Tag về chuỗi
-                    await LoadXmlDataToDataGridAsync(filePath); // Gọi hàm để load dữ liệu từ filePath
+                    if (_currentFilePath != filePath)
+                    {
+
+                        await LoadXmlDataToDataGridAsync(filePath);
+                    }
+
                 }
             }
             else
@@ -360,38 +366,43 @@ namespace Civ6TranslationToolWPF.Pages
             }
 
         }
-        private void LoadXmlWithAvalonEditAsync(string xmlContent)
+        private void LoadXmlToAvalonEditor(string xmlContent)
         {
-
             xmlTextEditor.SyntaxHighlighting = ICSharpCode.AvalonEdit.Highlighting.HighlightingManager.Instance.GetDefinition("XML");
             xmlTextEditor.Text = xmlContent;
 
         }
-
         private async Task LoadXmlDataToDataGridAsync(string filePath)
         {
+
+
+            if (string.IsNullOrEmpty(filePath))
+            {
+                IsLoadDone = true;
+                return;
+            }
+
+            IsLoadDone = false;
+            //xmlTreeView.IsEnabled = false;
+
+
             _ = LoadDataWithProgressAsync(LockXml: true, NeedWait: true, LockControll: true);
 
-            //ShowNotification(T("LoadingFile", Path.GetFileName(filePath)));
             try
             {
-                // Disable các nút chọn file và tree view trong khi load dữ liệu
-                //OpenXMLFile_btn.IsEnabled = false;
-                //xmlTreeView.IsEnabled = false;
+                FileState newFileState = await FileState.CreateAsync(filePath);
+                openFiles.AddOrUpdate(filePath, newFileState, (key, existingValue) => newFileState);
 
-                // Sử dụng await để xử lý bất đồng bộ việc tạo FileState nếu chưa có
-                if (!openFiles.TryGetValue(filePath, out FileState? value))
+                FileState? currentFileState = openFiles[filePath];
+
+                if (currentFileState == null)
                 {
-                    var fileState = new FileState(filePath);
-                    value = fileState;
-                    openFiles.Add(filePath, value);
+                    await LoadXmlDataToDataGridAsync(filePath);
+                    return;
                 }
 
-                var currentFileState = value;
-
-                // Đọc file XML một cách bất đồng bộ
-                string fileContent = await File.ReadAllTextAsync(filePath);
-                LoadXmlWithAvalonEditAsync(fileContent);
+                //LoadXmlToAvalonEditor(await File.ReadAllTextAsync(filePath));
+                LoadXmlToAvalonEditor(currentFileState.XmlDocument.ToString());
 
                 var replaceElements = currentFileState.XmlDocument.Descendants("Replace");
                 if (!replaceElements.Any())
@@ -424,16 +435,46 @@ namespace Civ6TranslationToolWPF.Pages
                     IsLoadDone = true;
                     return;
                 }
+
+                currentFileState.TextDataList.Clear();
+                int index = 1;
+                foreach (var item in replaceElements)
+                {
+                    var tagValue = item.Attribute("Tag")?.Value;
+                    var lang = item.Attribute("lang")?.Value ?? item.Attribute("Language")?.Value;
+                    var textElement = item.Element("Text");
+
+                    var originalText = item.Value;
+                    if (textElement != null)
+                    {
+                        originalText = textElement.Value;
+                    }
+
+                    var translatedText = item.Value;
+                    currentFileState.TextDataList.Add(new TextData
+                    {
+                        Index = index++,
+                        OriginalText = originalText,
+                        Tag = tagValue ?? "",
+                        Language = lang ?? "",
+                        TranslatedText = originalText
+                    });
+
+
+                }
+
+                translationDataGrid.ItemsSource = currentFileState.TextDataList;
+                translationDataGrid.SelectedIndex = 0;
+
                 EnableController();
                 _currentFilePath = filePath;
 
-                _appState.LastFile = _appState.Histories.FirstOrDefault(f => f.FilePath == filePath) ?? new FileState();
+                _appState.LastFile = currentFileState;
                 _appState.LastFile.FilePath = filePath;
-                _appState.LastFile.IsCurrent = true;
-                _appState.CheckAndAddOrUpdateLastFile();
-                _appState.Save();
-                filePathTextBox.Text = filePath;
+                //_appState.CheckAndAddOrUpdateLastFile();
 
+                filePathTextBox.Text = filePath;
+                ShowNotification($"currentFileState.LastIndex: {currentFileState.LastIndex}");
                 if (currentFileState.LastIndex > 0 && currentFileState.LastIndex <= translationDataGrid.Items.Count)
                 {
                     translationDataGrid.SelectedIndex = currentFileState.LastIndex - 1;
@@ -446,16 +487,19 @@ namespace Civ6TranslationToolWPF.Pages
                 }
 
 
+                // Enable lại các thành phần khi hoàn tất
+                xmlTreeView.IsEnabled = true;
+                // OpenXMLFile_btn.IsEnabled = true;
+                IsLoadDone = true;
+                //_appState.Save();
             }
             catch (Exception ex)
             {
                 System.Windows.MessageBox.Show(T("ErrorReadingFile", ex.Message + $"\n{filePath}"), "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
 
-            // Enable lại các thành phần khi hoàn tất
-            xmlTreeView.IsEnabled = true;
-            OpenXMLFile_btn.IsEnabled = true;
             IsLoadDone = true;
+
         }
 
 
@@ -507,7 +551,7 @@ namespace Civ6TranslationToolWPF.Pages
 
 
 
-        private void OpenXMLFile_Click(object sender, RoutedEventArgs e)
+        private async void OpenXMLFile_Click(object sender, RoutedEventArgs e)
         {
             OpenFileDialog openFileDialog = new OpenFileDialog();
 
@@ -516,7 +560,8 @@ namespace Civ6TranslationToolWPF.Pages
             if (openFileDialog.ShowDialog() == true)
             {
                 string selectedFile = openFileDialog.FileName;
-                _ = LoadXmlDataToDataGridAsync(selectedFile);
+                await LoadXmlDataToDataGridAsync(selectedFile);
+
 
             }
         }
@@ -531,9 +576,6 @@ namespace Civ6TranslationToolWPF.Pages
 
         void DoClosing()
         {
-            //ShowNotification(T("Closing"));
-
-            _appState.LastFile.IsCurrent = false;
             _appState.Save();
             //this.Close();
         }
@@ -582,7 +624,8 @@ namespace Civ6TranslationToolWPF.Pages
                     {
                         xmlTextEditor.Select(offset, 0);
                         xmlTextEditor.ScrollToLine(xmlTextEditor.Document.GetLineByOffset(offset).LineNumber);
-                        xmlTextEditor.Focus();
+                        //xmlTextEditor.Focus();
+                        translatedTextBox.Focus();
                     }
                     else
                     {
@@ -590,19 +633,6 @@ namespace Civ6TranslationToolWPF.Pages
                     }
                 }
             }
-        }
-
-
-        private int GetOffset(XElement element)
-        {
-
-            string xmlText = xmlTextEditor.Text;
-
-            string elementString = element.ToString(SaveOptions.DisableFormatting);
-
-            int offset = xmlText.IndexOf(elementString, StringComparison.Ordinal);
-
-            return offset;
         }
 
 
@@ -625,6 +655,19 @@ namespace Civ6TranslationToolWPF.Pages
 
             }
         }
+        private int GetOffset(XElement element)
+        {
+
+            string xmlText = xmlTextEditor.Text;
+
+            string elementString = element.ToString(SaveOptions.DisableFormatting);
+
+            int offset = xmlText.IndexOf(elementString, StringComparison.Ordinal);
+
+            return offset;
+        }
+
+
 
 
 
@@ -905,10 +948,10 @@ namespace Civ6TranslationToolWPF.Pages
 
         private void SaveAll_Click(object sender, RoutedEventArgs e)
         {
-            foreach (var fileState in openFiles.Values)
-            {
-                SaveFile(fileState);
-            }
+            //foreach (var fileState in openFiles.Values)
+            //{
+            //    SaveFile(fileState);
+            //}
             ShowNotification(T("SaveAllSuccess"));
         }
 
@@ -1084,10 +1127,6 @@ namespace Civ6TranslationToolWPF.Pages
 
 
 
-        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
-        {
-            DoClosing();
-        }
 
         private void OpenDictionary_Click(object sender, RoutedEventArgs e)
         {

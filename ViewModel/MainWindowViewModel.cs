@@ -3,6 +3,7 @@ using System.Windows;
 using System.Windows.Input;
 using Civ6TranslationToolWPF.Levie;
 using Civ6TranslationToolWPF.Pages;
+using Civ6TranslationToolWPF.Windows;
 using CommunityToolkit.Mvvm.Input;
 using Application = System.Windows.Application;
 using MessageBox = System.Windows.MessageBox;
@@ -37,6 +38,8 @@ namespace Civ6TranslationToolWPF.ViewModel
             ChangeLanguage(this.appState.Language);
 
             this.mainPage.LanguageChangeRequested += OnLanguageChangeRequested;
+
+            
         }
 
         public void SaveAppState()

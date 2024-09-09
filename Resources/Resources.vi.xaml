@@ -1,6 +1,7 @@
-﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-                    xmlns:system="clr-namespace:System;assembly=netstandard">
+﻿<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:system="clr-namespace:System;assembly=netstandard">
     <system:String x:Key="AppName">Civ6 Translation Tool</system:String>
     <system:String x:Key="OpenFolder">Chọn thư mục</system:String>
     <system:String x:Key="OpenFile">Mở File XML</system:String>
@@ -27,8 +28,8 @@
     <system:String x:Key="SaveAll">Lưu tất cả</system:String>
     <system:String x:Key="ExitApp">Thoát</system:String>
 
-    
-    <!-- Thông báo không hỗ trợ chỉnh sửa -->
+
+    <!--  Thông báo không hỗ trợ chỉnh sửa  -->
     <system:String x:Key="FileEditingNotSupported">Tệp này hiện không hỗ trợ chỉnh sửa. Để xem nội dung tệp, chọn tab "Trình sửa XML".</system:String>
     <system:String x:Key="ErrorReadingFile">Có lỗi xảy ra khi đọc tệp: {0}</system:String>
     <system:String x:Key="UnsupportedFileFormat">Định dạng tệp không được hỗ trợ.</system:String>
@@ -56,4 +57,5 @@
     <system:String x:Key="ClickToSeeDetails">(Nhấn để xem chi tiết)</system:String>
     <system:String x:Key="UnsavedChangesWarning">Mọi dữ liệu sẽ không được lưu xuống file XML thực cho đến khi bạn nhấn nút "{0}" Bên dưới</system:String>
     <system:String x:Key="LoadingFile">Đang tải file: {0}</system:String>
+    <system:String x:Key="InvalidFileFormat">Định dạng file không được hỗ trợ.</system:String>
 </ResourceDictionary>

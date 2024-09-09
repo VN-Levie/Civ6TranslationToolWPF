@@ -9,7 +9,7 @@ namespace Civ6TranslationToolWPF.Levie
         public string ProjectName { get; set; }
         public string Language { get; set; }
         public FileState LastFile { get; set; }
-        public string DirPath { get; set; }
+        public string DirPath { get; set; } = String.Empty;
         public bool Opened { get; set; } = false;
         public List<FileState> Histories { get; set; }
 
@@ -29,6 +29,8 @@ namespace Civ6TranslationToolWPF.Levie
             DirPath = "";
             Language = "en_US";
         }
+
+
 
         // Phương thức lưu trạng thái vào file JSON
         public void Save()
@@ -91,20 +93,28 @@ namespace Civ6TranslationToolWPF.Levie
 
         internal void CheckAndAddOrUpdateLastFile()
         {
-            //khởi taọ một List chứa các filestate nếu chưa có thì tạo mới
-            Histories ??= [];
-            //kiểm tra xem LastFile có tồn tại trong Histories chưa
-            var file = Histories.FirstOrDefault(f => f.FilePath == LastFile.FilePath);
-            if (file == null)
+            try
             {
-                //nếu chưa tồn tại thì thêm vào
-                Histories.Add(LastFile);
+                //khởi taọ một List chứa các filestate nếu chưa có thì tạo mới
+                Histories ??= [];
+                //kiểm tra xem LastFile có tồn tại trong Histories chưa
+                var file = Histories.FirstOrDefault(f => f.FilePath == LastFile.FilePath);
+                if (file == null)
+                {
+                    //nếu chưa tồn tại thì thêm vào
+                    Histories.Add(LastFile);
+                }
+                else
+                {
+                    //nếu đã tồn tại thì cập nhật lại
+                    file.LastIndex = LastFile.LastIndex;
+                    file.LastModified = LastFile.LastModified;
+                }
             }
-            else
+            catch (Exception ex)
             {
-                //nếu đã tồn tại thì cập nhật lại
-                file.LastIndex = LastFile.LastIndex;
-                file.LastModified = LastFile.LastModified;
+
+                MessageBox.Show("CheckAndAddOrUpdateLastFile: \n" + ex.Message);
             }
         }
 

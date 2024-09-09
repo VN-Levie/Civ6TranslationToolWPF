@@ -1,6 +1,7 @@
-﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-                    xmlns:system="clr-namespace:System;assembly=netstandard">
+﻿<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:system="clr-namespace:System;assembly=netstandard">
     <system:String x:Key="AppName">Civ6 Translation Tool</system:String>
     <system:String x:Key="OpenFolder">Open Folder</system:String>
     <system:String x:Key="OpenFile">Open XML File</system:String>
@@ -27,7 +28,7 @@
     <system:String x:Key="SaveAll">Save All</system:String>
     <system:String x:Key="ExitApp">Exit App</system:String>
 
-    <!-- File editing not supported message -->
+    <!--  File editing not supported message  -->
     <system:String x:Key="FileEditingNotSupported">This file is currently not supported for editing. To view the file contents, select the "XML Editor" Tab.</system:String>
     <system:String x:Key="ErrorReadingFile">Error occurred while reading the file: {0}</system:String>
     <system:String x:Key="UnsupportedFileFormat">The file format is unsupported.</system:String>
@@ -55,4 +56,5 @@
     <system:String x:Key="ClickToSeeDetails">(Click to see details)</system:String>
     <system:String x:Key="UnsavedChangesWarning">No data will be saved to the actual XML file until you press the "{0}" button below</system:String>
     <system:String x:Key="LoadingFile">Loading file: {0}</system:String>
+    <system:String x:Key="InvalidFileFormat">The file format is unsupported.</system:String>
 </ResourceDictionary>

@@ -4,6 +4,7 @@
 🇬🇧 [**English**](#english)  
 🇻🇳 [**Tiếng Việt**](#vietnamese)
 
+---
 
 ## <a name="english"></a> English
 
@@ -74,9 +75,13 @@ If you are a developer and would like to customize the application, follow the s
 - Special thanks to [Morten Brudvik](https://github.com/mortenbrudvik/custom-wpf-window-titlebar-with-snap-layout) for his repository, which helped in the implementation of the custom title bar.
 - **CommunityToolkit**: The community behind this toolkit has provided valuable tools and resources that enhanced the development process.
 
-### License
+### License and Legal Disclaimer
 
 This project is licensed under the **GNU General Public License v3.0**. You are free to download, modify, and distribute the code, but any distributed versions must remain under the GPL v3.0 license, and the source code must be made available.
+
+Please be aware that using or distributing the output from this software may be against copyright legislation in your jurisdiction. You are responsible for ensuring that you're not breaking any laws.
+
+This software is not sponsored by or affiliated with **Firaxis Games**, **2K Games**, or their affiliates. "Civilization VI" is a registered trademark of **Firaxis Games** and **2K Games** in the U.S. and elsewhere.
 
 See the full license [here](https://www.gnu.org/licenses/gpl-3.0.en.html).
 
@@ -151,9 +156,12 @@ Nếu bạn là lập trình viên và muốn tùy chỉnh ứng dụng, hãy l�
 - Đặc biệt cảm ơn [Morten Brudvik](https://github.com/mortenbrudvik/custom-wpf-window-titlebar-with-snap-layout) với repository đã giúp thực hiện tính năng thanh tiêu đề tùy chỉnh.
 - **CommunityToolkit**: Cộng đồng đã cung cấp các công cụ và tài nguyên hữu ích, giúp quá trình phát triển diễn ra thuận lợi hơn.
 
-### Giấy phép
+### Giấy phép và tuyên bố pháp lý
 
 Dự án này được cấp phép theo **GNU General Public License v3.0**. Bạn có thể tải về, chỉnh sửa và phân phối mã nguồn, nhưng mọi phiên bản phân phối phải giữ nguyên giấy phép GPL v3.0 và mã nguồn phải được công khai.
 
-Xem chi tiết giấy phép [tại đây](https://www.gnu.org/licenses/gpl-3.0.en.html).
+Xin lưu ý rằng việc sử dụng hoặc phân phối kết quả đầu ra từ phần mềm này có thể vi phạm luật bản quyền tại khu vực của bạn. Bạn có trách nhiệm đảm bảo rằng mình không vi phạm bất kỳ luật nào.
 
+Phần mềm này không được tài trợ hoặc liên kết với **Firaxis Games**, **2K Games**, hoặc các đối tác của họ. "Civilization VI" là thương hiệu đã được đăng ký của **Firaxis Games** và **2K Games** tại Hoa Kỳ và các quốc gia khác.
+
+Xem chi tiết giấy phép [tại đây](https://www.gnu.org/licenses/gpl-3.0.en.html).
